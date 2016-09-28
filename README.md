@@ -1,6 +1,7 @@
 # Node People API
 
 [![BuildStatus](https://travis-ci.org/stevenalexander/node-people-api.svg?branch=master)](https://travis-ci.org/stevenalexander/node-people-api?branch=master)
+[![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 Simple [Express](https://expressjs.com/) RESTful API for People data.
 
@@ -45,3 +46,7 @@ node_modules/.bin/knex migrate:latest --env development
 ```
 npm test
 ```
+
+## Notes
+
+* used `npm shrinkwrap` to fix dependency versions
