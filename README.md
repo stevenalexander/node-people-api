@@ -9,6 +9,7 @@ Using as part of testing various build/containerisation PoCs.
 ## Requires
 
 * [Node](https://nodejs.org/en/)
+* [Docker](https://www.docker.com/) (optional)
 
 ## Run
 
@@ -27,6 +28,16 @@ node_modules/.bin/knex migrate:latest --env development
 
 # available http://localhost:3001/people
 npm start
+```
+
+### Run in container
+
+```
+# Spin up MySql and node-people-api containers
+docker-compose up
+
+# setup DB after MySql is available, separate for CI purposes
+node_modules/.bin/knex migrate:latest --env development
 ```
 
 ## Test

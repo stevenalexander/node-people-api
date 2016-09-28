@@ -1,0 +1,24 @@
+version: '2'
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+     - MYSQL_ROOT_PASSWORD=root
+     - MYSQL_USER=peopledbuser
+     - MYSQL_PASSWORD=peopledbuser
+     - MYSQL_DATABASE=people
+    ports:
+     - "3306:3306"
+  node-people-api:
+    build: .
+    ports:
+     - "3001:3001"
+    environment:
+     - DB_USERNAME=peopledbuser
+     - DB_PASSWORD=peopledbuser
+     - DB_SERVER=mysql
+     - DB_DATABASE=people
+    links:
+     - mysql
+    depends_on:
+     - mysql
