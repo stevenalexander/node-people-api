@@ -10,4 +10,6 @@ RUN npm install
 
 EXPOSE 3001
 
+HEALTHCHECK CMD curl --fail http://localhost:3001/people/status || exit 1
+
 CMD npm start

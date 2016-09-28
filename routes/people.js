@@ -29,4 +29,8 @@ module.exports = function (app) {
       res.status(500).json('error', {message: error.message, error: error})
     })
   })
+
+  route.get('/status', function (req, res) {
+    res.json({'status': 'OK'})
+  })
 }
