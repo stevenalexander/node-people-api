@@ -36,9 +36,6 @@ npm start
 ```
 # Spin up MySql and node-people-api containers
 docker-compose up
-
-# setup DB after MySql is available, separate for CI purposes
-node_modules/.bin/knex migrate:latest --env development
 ```
 
 ## Test
@@ -50,3 +47,4 @@ npm test
 ## Notes
 
 * used `npm shrinkwrap` to fix dependency versions
+* added `wait-for-mysql.sh` script to poll mysql container using `knex migrate:currentVersion` before running migration scripts, avoiding the need to call migration scripts outside container
