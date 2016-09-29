@@ -12,4 +12,4 @@ EXPOSE 3001
 
 HEALTHCHECK CMD curl --fail http://localhost:3001/people/status || exit 1
 
-CMD npm start
+CMD ./wait-for-mysql.sh && node_modules/.bin/knex migrate:latest --env development && npm start
