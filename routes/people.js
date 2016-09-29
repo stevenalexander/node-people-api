@@ -8,7 +8,7 @@ module.exports = function (app) {
 
   route.get('/', function (req, res) {
     person.getAll().then(function (people) {
-      res.json(people)
+      res.status(200).json(people)
     }).catch(function (error) {
       res.status(500).json('error', {message: error.message, error: error})
     })
