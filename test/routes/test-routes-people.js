@@ -5,7 +5,7 @@ var supertest = require('supertest')
 var expect = require('chai').expect
 var express = require('express')
 var bodyParser = require('body-parser')
-var person = require('../../model/person')
+var person = require('../../app/model/person')
 require('sinon-bluebird')
 
 describe('index', function () {
@@ -17,7 +17,7 @@ describe('index', function () {
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: false }))
 
-    var route = proxyquire('../../routes/people', { '../model/person': person })
+    var route = proxyquire('../../app/routes/people', { '../model/person': person })
 
     route(app)
 
