@@ -1,0 +1,62 @@
+FORMAT: 1A
+
+# People
+
+People is a simple API used to submit and retrieve information about People for proof of concept applications.
+
+# Group People
+
+Resources relating to People in the API.
+
+## People Collection [/people]
+
+### List all People [GET]
+
++ Response 200 (application/json)
+
+        [
+          {
+            "id": 1,
+            "name": "Adam"
+          }
+        ]
+
+### Create a New Person [POST]
+
+You may create a person using this action. It takes a JSON object containing a name.
+
++ name (string) - Name
+
++ Request (application/json)
+
+        {
+          "name": "Adam"
+        }
+
++ Response 201
+
+        {
+          "id": 4,
+          "name": "Adam"
+        }
+
+## People [/people/{id}]
+
++ Parameters
+    + id (number) - ID of the person in the form of an integer
+
+### Delete a Person [DELETE]
+
+You may delete a person using this action. It takes an ID in the path.
+
++ Response 204
+
+## People status [/people/status]
+
+### Get status of people API [GET]
+
++ Response 200 (application/json)
+
+        {
+            "status": "OK"
+        }

@@ -44,6 +44,19 @@ docker-compose up
 npm test
 ```
 
+## API Documentation
+
+The API is documented using [API Blueprint](https://apiblueprint.org/) at `PeopleApi.apib` and a friendly static HTML version is generated using [aglio](https://github.com/danielgtaylor/aglio) which is available on at URL `/documentation.html`.
+
+The documentation is be updated for changes by:
+
+```
+npm install -g aglio
+aglio -i PeopleApi.apib --theme-template triple -o app/documentation/documentation.html
+```
+
+The `PeopleApi.apib` file can be used by [various tools](https://apiblueprint.org/tools.html) to aid with testing or generating clients.
+
 ## Notes
 
 * used `npm shrinkwrap` to fix dependency versions
