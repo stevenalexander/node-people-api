@@ -12,7 +12,8 @@
     "express": "^4.14.0",
     "knex": "^0.12.1",
     "morgan": "^1.7.0",
-    "mysql": "^2.11.1"
+    "mysql": "^2.11.1",
+    "validator": "^6.0.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",

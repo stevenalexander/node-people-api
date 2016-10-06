@@ -1,4 +1,4 @@
-/* global describe beforeEach it */
+/* global describe beforeEach afterEach it */
 var proxyquire = require('proxyquire')
 var sinon = require('sinon')
 var supertest = require('supertest')
@@ -6,22 +6,35 @@ var expect = require('chai').expect
 var express = require('express')
 var bodyParser = require('body-parser')
 var person = require('../../app/model/person')
+
 require('sinon-bluebird')
 
 describe('index', function () {
   var request
+  var sandbox
+  var stubPersonValidator
 
   beforeEach(function () {
-    // Setting up the app this way means all dependencies from app.js are explicitly defined per route file
+    sandbox = sinon.sandbox.create()
+
     var app = express()
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: false }))
 
-    var route = proxyquire('../../app/routes/people', { '../model/person': person })
+    stubPersonValidator = sinon.stub()
+    if (person.add.restore) person.add.restore()
+
+    var route = proxyquire('../../app/routes/people', {
+      '../model/person': person,
+      '../validators/person-validator': stubPersonValidator
+    })
 
     route(app)
 
     request = supertest(app)
+  })
+  afterEach(function () {
+    sandbox.restore()
   })
 
   describe('GET /people', function () {
@@ -33,8 +46,8 @@ describe('index', function () {
         .get('/people')
         .expect(200)
         .end(function (error, response) {
-          expect(stubGetAll.calledOnce).to.be.true
           expect(error).to.be.null
+          expect(stubGetAll.calledOnce).to.be.true
           expect(response.text).to.equal(JSON.stringify(people))
           done()
         })
@@ -42,7 +55,8 @@ describe('index', function () {
   })
 
   describe('POST /people', function () {
-    it('should respond with a 201 and return item', function (done) {
+    it('should respond with a 201 and return item when valid', function (done) {
+      stubPersonValidator.returns(false)
       var newPerson = {id: 1, name: 'Brian'}
       var stubAdd = sinon.stub(person, 'add').resolves(newPerson)
 
@@ -52,9 +66,29 @@ describe('index', function () {
         .send(JSON.stringify(person))
         .expect(201)
         .end(function (error, response) {
-          expect(stubAdd.calledOnce).to.be.true
           expect(error).to.be.null
+          expect(stubPersonValidator.calledOnce).to.be.true
+          expect(stubAdd.calledOnce).to.be.true
           expect(response.text).to.equal(JSON.stringify(newPerson))
+          done()
+        })
+    })
+
+    it('should respond with a 400 and return item when invalid', function (done) {
+      var errorMessage = 'Error!'
+      stubPersonValidator.returns([errorMessage])
+      var stubAdd = sinon.stub(person, 'add').resolves({})
+
+      request
+        .post('/people')
+        .type('json')
+        .send(JSON.stringify(person))
+        .expect(400)
+        .end(function (error, response) {
+          expect(error).to.be.null
+          expect(stubPersonValidator.calledOnce).to.be.true
+          expect(stubAdd.calledOnce).to.be.false
+          expect(response.text).to.contain(errorMessage)
           done()
         })
     })
@@ -68,8 +102,8 @@ describe('index', function () {
         .delete('/people/1234')
         .expect(204)
         .end(function (error, response) {
-          expect(stubDel.calledOnce).to.be.true
           expect(error).to.be.null
+          expect(stubDel.calledOnce).to.be.true
           done()
         })
     })

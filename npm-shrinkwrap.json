@@ -1535,6 +1535,11 @@
         }
       }
     },
+    "validator": {
+      "version": "6.0.0",
+      "from": "validator@latest",
+      "resolved": "http://registry.npmjs.org/validator/-/validator-6.0.0.tgz"
+    },
     "vary": {
       "version": "1.1.0",
       "from": "vary@>=1.1.0 <1.2.0",
