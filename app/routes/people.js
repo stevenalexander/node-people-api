@@ -15,11 +15,32 @@ module.exports = function (app) {
     })
   })
 
+  route.get('/:id', function (req, res) {
+    person.get(parseInt(req.params.id)).then(function (person) {
+      res.status(200).json(person)
+    }).catch(function (error) {
+      res.status(500).json({message: error.message, errors: error})
+    })
+  })
+
   route.post('/', function (req, res) {
     var errors = personValidator(req.body)
     if (!errors) {
-      person.add(req.body).then(function (newPersonId) {
-        res.status(201).json(newPersonId)
+      person.add(req.body).then(function (newPerson) {
+        res.status(201).json(newPerson)
+      }).catch(function (error) {
+        res.status(500).json({message: error.message, errors: error})
+      })
+    } else {
+      res.status(400).json({message: 'Invalid person', errors: errors})
+    }
+  })
+
+  route.put('/:id', function (req, res) {
+    var errors = personValidator(req.body)
+    if (!errors) {
+      person.update(req.params.id, req.body).then(function (existingPerson) {
+        res.status(200).json(existingPerson)
       }).catch(function (error) {
         res.status(500).json({message: error.message, errors: error})
       })

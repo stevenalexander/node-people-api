@@ -39,7 +39,7 @@ describe('index', function () {
 
   describe('GET /people', function () {
     it('should respond with a 200 and return people', function (done) {
-      var people = {people: [{name: 'Adam'}]}
+      var people = {people: [{name: 'Adam', dob: '1980-01-01T00:00:00.000Z', pet: null, status: 'ACTIVE'}]}
       var stubGetAll = sinon.stub(person, 'getAll').resolves(people)
 
       request
@@ -54,10 +54,27 @@ describe('index', function () {
     })
   })
 
+  describe('GET /people/1', function () {
+    it('should respond with a 200 and return a person', function (done) {
+      var onePerson = {name: 'Adam', dob: '1980-01-01T00:00:00.000Z', pet: null, status: 'ACTIVE'}
+      var stubGet = sinon.stub(person, 'get').withArgs(1).resolves(onePerson)
+
+      request
+        .get('/people/1')
+        .expect(200)
+        .end(function (error, response) {
+          expect(error).to.be.null
+          expect(stubGet.calledOnce).to.be.true
+          expect(response.text).to.equal(JSON.stringify(onePerson))
+          done()
+        })
+    })
+  })
+
   describe('POST /people', function () {
     it('should respond with a 201 and return item when valid', function (done) {
       stubPersonValidator.returns(false)
-      var newPerson = {id: 1, name: 'Brian'}
+      var newPerson = {id: 1, name: 'Brian', dob: '1980-01-01T00:00:00.000Z', status: 'NEW'}
       var stubAdd = sinon.stub(person, 'add').resolves(newPerson)
 
       request
@@ -88,6 +105,44 @@ describe('index', function () {
           expect(error).to.be.null
           expect(stubPersonValidator.calledOnce).to.be.true
           expect(stubAdd.calledOnce).to.be.false
+          expect(response.text).to.contain(errorMessage)
+          done()
+        })
+    })
+  })
+
+  describe('PUT /people/1', function () {
+    it('should respond with a 200 and return item when valid', function (done) {
+      stubPersonValidator.returns(false)
+      var existingPerson = {name: 'Brian', dob: '1980-01-01T00:00:00.000Z', status: 'NEW'}
+      var stubUpdate = sinon.stub(person, 'update').resolves(existingPerson)
+
+      request
+        .put('/people/1')
+        .type('json')
+        .send(JSON.stringify(person))
+        .expect(200)
+        .end(function (error, response) {
+          expect(error).to.be.null
+          expect(stubPersonValidator.calledOnce).to.be.true
+          expect(stubUpdate.calledOnce).to.be.true
+          expect(response.text).to.equal(JSON.stringify(existingPerson))
+          done()
+        })
+    })
+
+    it('should respond with a 400 and return item when invalid', function (done) {
+      var errorMessage = 'Error!'
+      stubPersonValidator.returns([errorMessage])
+
+      request
+        .put('/people/1')
+        .type('json')
+        .send(JSON.stringify(person))
+        .expect(400)
+        .end(function (error, response) {
+          expect(error).to.be.null
+          expect(stubPersonValidator.calledOnce).to.be.true
           expect(response.text).to.contain(errorMessage)
           done()
         })
