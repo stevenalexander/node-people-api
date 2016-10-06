@@ -7,6 +7,7 @@ class PersonValidator {
     const errors = []
     const name = data['name']
     const dob = data['dob']
+    const pet = data['pet']
     const status = data['status']
 
     if (!name || !npmValidator.isAlpha(name)) {
@@ -15,6 +16,10 @@ class PersonValidator {
 
     if (!dob || !npmValidator.isDate(dob)) {
       errors.push(messagesErrors.DobIsRequired)
+    }
+
+    if (pet && ['CAT', 'DOG', 'FISH'].indexOf(pet) === -1) {
+      errors.push(messagesErrors.InvalidPet)
     }
 
     if (!status || ['NEW', 'ACTIVE', 'DELETED'].indexOf(status) === -1) {

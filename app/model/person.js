@@ -3,13 +3,14 @@ var knex = require('knex')(config)
 
 module.exports = {
   getAll: function () {
-    return knex('person').select('id', 'name', 'dob', 'status')
+    return knex('person').select('id', 'name', 'dob', 'pet', 'status')
   },
   add: function (newPerson) {
     return knex('person')
       .insert({
         name: newPerson.name,
         dob: new Date(newPerson.dob),
+        pet: newPerson.pet,
         status: newPerson.status
       })
       .then(function (ids) {
@@ -17,6 +18,7 @@ module.exports = {
           id: ids[0],
           name: newPerson.name,
           dob: newPerson.dob,
+          pet: newPerson.pet,
           status: newPerson.status
         }
       })
