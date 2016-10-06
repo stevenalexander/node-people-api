@@ -17,27 +17,49 @@ Resources relating to People in the API.
         [
           {
             "id": 1,
-            "name": "Adam"
+            "name": "Axel",
+            "dob": "1980-01-01T00:00:00.000Z",
+            "pet": null,
+            "status": "ACTIVE"
           }
         ]
 
 ### Create a New Person [POST]
 
-You may create a person using this action. It takes a JSON object containing a name.
+You may create a person using this action.
 
 + name (string) - Name
++ dob (date) - date of birth
++ pet (string) - Pet (CAT/DOG/FISH)
++ status (string) - Status (NEW/ACTIVE/DELETED)
 
 + Request (application/json)
 
         {
-          "name": "Adam"
+          "name": "Darren",
+          "dob": "1982-01-01T00:00:00.000Z",
+          "pet": "CAT",
+          "status": "NEW"
         }
 
-+ Response 201
++ Response 201 (application/json)
 
         {
           "id": 4,
-          "name": "Adam"
+          "name": "Darren",
+          "dob": "1982-01-01T00:00:00.000Z",
+          "pet": "CAT",
+          "status": "NEW"
+        }
+
++ Response 400 (application/json)
+
+        {
+          "message": "Invalid person",
+          "errors": [
+              "dob must be supplied and a valid ISO 8601 date",
+              "status must be supplied and NEW/ACTIVE/DELETED"
+          ]
         }
 
 ## People [/people/{id}]
@@ -45,11 +67,122 @@ You may create a person using this action. It takes a JSON object containing a n
 + Parameters
     + id (number) - ID of the person in the form of an integer
 
+### Get a Person [GET]
+
+You may get all details for a person using this action.
+
++ Response 200 (application/json)
+
+        {
+          "name": "Axel",
+          "dob": "1980-01-01T00:00:00.000Z",
+          "status": "ACTIVE",
+          "pet": null,
+          "addresses": [
+            {
+              "addressline1": "1 Test Road",
+              "addressline2": null,
+              "addressline3": null,
+              "town": null,
+              "county": null,
+              "postcode": null,
+              "country": "Ireland"
+            }
+          ]
+        }
+
+### Update a Person [PUT]
+
+You may update a person using this action.
+
++ name (string) - Name
++ dob (date) - date of birth
++ pet (string) - Pet (CAT/DOG/FISH)
++ status (string) - Status (NEW/ACTIVE/DELETED)
+
++ Request (application/json)
+
+        {
+          "name": "Axelbbb",
+          "dob": "1980-01-01T00:00:00.000Z",
+          "pet": null,
+          "status": "ACTIVE"
+        }
+
++ Response 200 (application/json)
+
+        {
+          "id": "1",
+          "name": "Axelbbb",
+          "dob": "1980-01-01T00:00:00.000Z",
+          "pet": null,
+          "status": "ACTIVE"
+        }
+
++ Response 400 (application/json)
+
+        {
+          "message": "Invalid person",
+          "errors": [
+              "dob must be supplied and a valid ISO 8601 date",
+              "status must be supplied and NEW/ACTIVE/DELETED"
+          ]
+        }
+
 ### Delete a Person [DELETE]
 
-You may delete a person using this action. It takes an ID in the path.
+You may delete a person using this action.
 
 + Response 204
+
+## People Address [/people/{id}/address]
+
+### Create a New Person Address [POST]
+
+You may create a person address using this action.
+
++ addressline1 (string) - address line 1
++ addressline2 (string) - address line 1
++ addressline3 (string) - address line 1
++ town (string) - town
++ county (string) - county
++ postcode (string) - postcode
++ country (string) - country
+
++ Request (application/json)
+
+        {
+          "addressline1": "The Rose",
+          "addressline2": "1 Rose Road",
+          "addressline3": "Rose Lane",
+          "town": "RoseVille",
+          "county": "Rose Country",
+          "postcode": "RR11 11R",
+          "country": "Ireland"
+        }
+
++ Response 201 (application/json)
+
+        {
+          "id": 3,
+          "personid": "2",
+          "addressline1": "The Rose",
+          "addressline2": "1 Rose Road",
+          "addressline3": "Rose Lane",
+          "town": "RoseVille",
+          "county": "Rose Country",
+          "postcode": "RR11 11R",
+          "country": "Ireland"
+        }
+
++ Response 400 (application/json)
+
+        {
+          "message": "Invalid address",
+          "errors": [
+              "country must be less than 100 characters"
+          ]
+        }
 
 ## People status [/people/status]
 

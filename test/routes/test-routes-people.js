@@ -6,6 +6,7 @@ var expect = require('chai').expect
 var express = require('express')
 var bodyParser = require('body-parser')
 var person = require('../../app/model/person')
+var address = require('../../app/model/address')
 
 require('sinon-bluebird')
 
@@ -13,6 +14,7 @@ describe('index', function () {
   var request
   var sandbox
   var stubPersonValidator
+  var stubAddressValidator
 
   beforeEach(function () {
     sandbox = sinon.sandbox.create()
@@ -22,11 +24,13 @@ describe('index', function () {
     app.use(bodyParser.urlencoded({ extended: false }))
 
     stubPersonValidator = sinon.stub()
-    if (person.add.restore) person.add.restore()
+    stubAddressValidator = sinon.stub()
 
     var route = proxyquire('../../app/routes/people', {
       '../model/person': person,
-      '../validators/person-validator': stubPersonValidator
+      '../model/address': address,
+      '../validators/person-validator': stubPersonValidator,
+      '../validators/address-validator': stubAddressValidator
     })
 
     route(app)
@@ -94,7 +98,6 @@ describe('index', function () {
     it('should respond with a 400 and return item when invalid', function (done) {
       var errorMessage = 'Error!'
       stubPersonValidator.returns([errorMessage])
-      var stubAdd = sinon.stub(person, 'add').resolves({})
 
       request
         .post('/people')
@@ -104,7 +107,6 @@ describe('index', function () {
         .end(function (error, response) {
           expect(error).to.be.null
           expect(stubPersonValidator.calledOnce).to.be.true
-          expect(stubAdd.calledOnce).to.be.false
           expect(response.text).to.contain(errorMessage)
           done()
         })
@@ -159,6 +161,44 @@ describe('index', function () {
         .end(function (error, response) {
           expect(error).to.be.null
           expect(stubDel.calledOnce).to.be.true
+          done()
+        })
+    })
+  })
+
+  describe('POST /people/1/address', function () {
+    it('should respond with a 200 and return item when valid', function (done) {
+      stubAddressValidator.returns(false)
+      var newAddress = {addressline1: '1'}
+      var stubAddressAdd = sinon.stub(address, 'add').resolves(newAddress)
+
+      request
+        .post('/people/1/address')
+        .type('json')
+        .send(JSON.stringify(person))
+        .expect(201)
+        .end(function (error, response) {
+          expect(error).to.be.null
+          expect(stubAddressValidator.calledOnce).to.be.true
+          expect(stubAddressAdd.calledOnce).to.be.true
+          expect(response.text).to.equal(JSON.stringify(newAddress))
+          done()
+        })
+    })
+
+    it('should respond with a 400 and return item when invalid', function (done) {
+      var errorMessage = 'Error!'
+      stubAddressValidator.returns([errorMessage])
+
+      request
+        .post('/people/1/address')
+        .type('json')
+        .send(JSON.stringify(person))
+        .expect(400)
+        .end(function (error, response) {
+          expect(error).to.be.null
+          expect(stubAddressValidator.calledOnce).to.be.true
+          expect(response.text).to.contain(errorMessage)
           done()
         })
     })

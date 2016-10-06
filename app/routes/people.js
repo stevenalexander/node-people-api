@@ -1,6 +1,8 @@
 var express = require('express')
 var person = require('../model/person')
+var address = require('../model/address')
 var personValidator = require('../validators/person-validator')
+var addressValidator = require('../validators/address-validator')
 
 module.exports = function (app) {
   var route = express.Router()
@@ -55,6 +57,19 @@ module.exports = function (app) {
     }).catch(function (error) {
       res.status(500).json({message: error.message, errors: error})
     })
+  })
+
+  route.post('/:id/address', function (req, res) {
+    var errors = addressValidator(req.body)
+    if (!errors) {
+      address.add(req.params.id, req.body).then(function (newAddress) {
+        res.status(201).json(newAddress)
+      }).catch(function (error) {
+        res.status(500).json({message: error.message, errors: error})
+      })
+    } else {
+      res.status(400).json({message: 'Invalid address', errors: errors})
+    }
   })
 
   route.get('/status', function (req, res) {
