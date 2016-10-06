@@ -1,7 +1,6 @@
 var npmValidator = require('validator')
 var messagesErrors = require('./messages/errors')
 
-// Example of a base validator class used to reduce repeating code for forms with similar sets of fields
 class PersonValidator {
   validate (data) {
     const errors = []
