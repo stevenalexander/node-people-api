@@ -22,50 +22,28 @@ describe('personValidator', function () {
       done()
     })
 
-    it('return error if name not supplied', function (done) {
+    it('return errors for invalid person missing items', function (done) {
       var result = personValidator({})
       expect(result).to.include(errors.NameIsRequired)
+      expect(result).to.include(errors.DobIsRequired)
+      expect(result).to.include(errors.StatusIsRequired)
+      expect(result.length).to.equal(3)
       done()
     })
 
-    it('return error if name not alphanumeric', function (done) {
-      var result = personValidator({ name: '1234' })
+    it('return errors for invalid person fields', function (done) {
+      var data = {
+        name: '1234',
+        dob: 'A',
+        status: 'Cheese',
+        pet: 'Tiger'
+      }
+
+      var result = personValidator(data)
+
       expect(result).to.include(errors.NameIsRequired)
-      done()
-    })
-
-    it('return error if dob not set', function (done) {
-      var result = personValidator({})
       expect(result).to.include(errors.DobIsRequired)
-      done()
-    })
-
-    it('return error if dob not valid', function (done) {
-      var result = personValidator({ dob: 'A' })
-      expect(result).to.include(errors.DobIsRequired)
-      done()
-    })
-
-    it('return error if status not set', function (done) {
-      var result = personValidator({})
       expect(result).to.include(errors.StatusIsRequired)
-      done()
-    })
-
-    it('return error if status not valid', function (done) {
-      var result = personValidator({ status: 'Cheese' })
-      expect(result).to.include(errors.StatusIsRequired)
-      done()
-    })
-
-    it('return no error if pet not set', function (done) {
-      var result = personValidator({})
-      expect(result).to.not.include(errors.InvalidPet)
-      done()
-    })
-
-    it('return error if pet not valid', function (done) {
-      var result = personValidator({ pet: 'Tiger' })
       expect(result).to.include(errors.InvalidPet)
       done()
     })
