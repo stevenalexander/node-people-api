@@ -1,24 +1,19 @@
 version: '2'
 services:
-  mysql:
-    image: mysql:latest
+  postgres:
+    image: postgres:latest
     environment:
-     - MYSQL_ROOT_PASSWORD=root
-     - MYSQL_USER=peopledbuser
-     - MYSQL_PASSWORD=peopledbuser
-     - MYSQL_DATABASE=people
+     - POSTGRES_PASSWORD=mysecretpassword
     ports:
-     - "3306:3306"
+     - "5432:5432"
   node-people-api:
     build: .
     ports:
      - "3001:3001"
     environment:
-     - DB_USERNAME=peopledbuser
-     - DB_PASSWORD=peopledbuser
-     - DB_SERVER=mysql
-     - DB_DATABASE=people
+     - POSTGRES_PASSWORD=mysecretpassword
+     - POSTGRES_HOST=postgres
     links:
-     - mysql
+     - postgres
     depends_on:
-     - mysql
+     - postgres

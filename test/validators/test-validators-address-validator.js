@@ -1,3 +1,4 @@
+/* eslint no-unused-expressions: 0 */
 /* global describe beforeEach it */
 var expect = require('chai').expect
 var addressValidator = require('../../app/validators/address-validator')
@@ -7,12 +8,12 @@ const STRING_11 = '01234567890'
 const STRING_101 = '01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890'
 const STRING_201 = '012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890'
 
-describe('addressValidator', function () {
-  beforeEach(function () {
+describe('addressValidator', () => {
+  beforeEach(() => {
   })
 
-  describe('should validate address', function (done) {
-    it('return true for valid address', function (done) {
+  describe('should validate address', () => {
+    it('return true for valid address', () => {
       var data = {
         addressline1: 'The Shoe',
         addressline2: '1 Motherhubbard Road',
@@ -26,18 +27,16 @@ describe('addressValidator', function () {
       var result = addressValidator(data)
 
       expect(result).to.be.false
-      done()
     })
 
-    it('return errors for invalid address missing items', function (done) {
+    it('return errors for invalid address missing items', () => {
       var result = addressValidator({})
       expect(result).to.include(errors.AddressLine1IsRequired)
       expect(result).to.include(errors.AddressCountryIsRequired)
       expect(result.length).to.equal(2)
-      done()
     })
 
-    it('return errors for invalid address fields', function (done) {
+    it('return errors for invalid address fields', () => {
       var data = {
         addressline1: STRING_201,
         addressline2: STRING_201,
@@ -57,7 +56,6 @@ describe('addressValidator', function () {
       expect(result).to.include(errors.AddressCountyMaxSize)
       expect(result).to.include(errors.AddressPostcodeMaxSize)
       expect(result).to.include(errors.AddressCountryIsRequired)
-      done()
     })
   })
 })

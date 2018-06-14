@@ -17,15 +17,11 @@ Using as part of testing various build/containerisation PoCs.
 ```
 npm install
 
-# Set env for MySql database
-# docker run --name mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=people -p 3306:3306 -d mysql:latest
-export DB_USERNAME='root'
-export DB_PASSWORD='root'
-export DB_SERVER='127.0.0.1'
-export DB_DATABASE='people'
+# Start PostGres container
+# docker run --name some-postgres -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword -d postgres
 
 # Setup DB
-node_modules/.bin/knex migrate:latest --env development
+npm run migrations
 
 # available http://localhost:3001/people
 npm start
@@ -34,7 +30,7 @@ npm start
 ### Run in container
 
 ```
-# Spin up MySql and node-people-api containers
+# Spin up PostGres and node-people-api containers
 docker-compose up
 ```
 
@@ -60,4 +56,4 @@ The `PeopleApi.apib` file can be used by [various tools](https://apiblueprint.or
 ## Notes
 
 * used `npm shrinkwrap` to fix dependency versions
-* added `wait-for-mysql.sh` script to poll mysql container using `knex migrate:currentVersion` before running migration scripts, avoiding the need to call migration scripts outside container
+* added `wait-for-postgres.sh` script to poll container using `knex migrate:currentVersion` before running migration scripts, avoiding the need to call migration scripts outside container

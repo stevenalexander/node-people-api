@@ -13,7 +13,7 @@ class PersonValidator {
       errors.push(messagesErrors.NameIsRequired)
     }
 
-    if (!dob || !npmValidator.isDate(dob)) {
+    if (!dob || !npmValidator.isISO8601(dob)) {
       errors.push(messagesErrors.DobIsRequired)
     }
 

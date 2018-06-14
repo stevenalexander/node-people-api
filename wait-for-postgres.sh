@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
-echo "Waiting for mysql"
+echo "Waiting for postgres"
 until node_modules/.bin/knex migrate:currentVersion &> /dev/null
 do
   printf "."
   sleep 1
 done
 
-echo -e "\nmysql ready"
+echo -e "\npostgres ready"

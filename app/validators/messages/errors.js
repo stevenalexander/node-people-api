@@ -13,4 +13,3 @@ module.exports = {
   AddressPostcodeMaxSize: `postcode must be less than ${constants.MAX_ADDRESS_POSTCODE} characters`,
   AddressCountryIsRequired: `country must be supplied and less than ${constants.MAX_ADDRESS_COUNTRY} characters`
 }
-
